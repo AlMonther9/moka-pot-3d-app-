@@ -376,7 +376,7 @@ export function ContentOverlay({
           href="https://almonther.studio/"
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:text-amber-400 transition-colors uppercase"
+          className="hover:text-rose-400 transition-colors uppercase"
         >
           My Bialetti Lab — Made with ♥ by Almonther
         </a>
