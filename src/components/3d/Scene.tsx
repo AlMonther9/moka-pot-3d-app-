@@ -13,9 +13,11 @@ interface SceneProps {
 
 export function Scene({ scrollProgress, onHoverPart, variant = 'dark' }: SceneProps) {
   const [mounted, setMounted] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(false);
 
   React.useEffect(() => {
     setMounted(true);
+    setIsMobile(window.matchMedia('(max-width: 768px)').matches || ('ontouchstart' in window));
   }, []);
 
   if (!mounted) {
@@ -30,6 +32,7 @@ export function Scene({ scrollProgress, onHoverPart, variant = 'dark' }: ScenePr
         gl={{ antialias: true, alpha: true }}
         eventSource={typeof window !== 'undefined' ? document.getElementById('canvas-container') || undefined : undefined}
         className="w-full h-full pointer-events-auto"
+        style={{ touchAction: isMobile ? 'pan-y' : 'none' }}
       >
         {/* Soft Ambient Light */}
         <ambientLight intensity={0.5} />
@@ -54,7 +57,7 @@ export function Scene({ scrollProgress, onHoverPart, variant = 'dark' }: ScenePr
 
         {/* 3D Model — single pot, centered, variant-controlled */}
         <Suspense fallback={null}>
-          <MokaPot scrollProgress={scrollProgress} onHoverPart={onHoverPart} variant={variant} xOffset={0} />
+          <MokaPot scrollProgress={scrollProgress} onHoverPart={onHoverPart} variant={variant} xOffset={0} isMobile={isMobile} />
           
           {/* Studio HDR Environment Map for metallic reflections */}
           <Environment preset="studio" />
@@ -74,6 +77,7 @@ export function Scene({ scrollProgress, onHoverPart, variant = 'dark' }: ScenePr
 
         {/* Orbit Controls with limited tilt and disabled zoom/pan to prevent page scroll hijack */}
         <OrbitControls
+          enabled={!isMobile}
           enableZoom={false}
           enablePan={false}
           minPolarAngle={Math.PI / 4}
