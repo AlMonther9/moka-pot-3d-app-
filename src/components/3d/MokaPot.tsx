@@ -382,12 +382,28 @@ export function MokaPot({ scrollProgress, onHoverPart, variant = 'dark', xOffset
     }
   };
 
-  // Beige painted aluminum body — warm sandy tone
-  const creamBodyMaterial = React.useMemo(() => new THREE.MeshStandardMaterial({
-    color: new THREE.Color('#C8A882'),
-    metalness: 0.20,
-    roughness: 0.60,
-  }), []);
+  // Beige painted aluminum body — warm sandy tone, using cloned high-resolution textures for scratches and details
+  const creamBodyMaterial = React.useMemo(() => {
+    const baseMat = materials['moka-pot-material1'];
+    if (!baseMat) {
+      return new THREE.MeshStandardMaterial({
+        color: new THREE.Color('#C8A882'),
+        metalness: 0.20,
+        roughness: 0.60,
+      });
+    }
+
+    const mat = baseMat.clone();
+    // Warm beige/linen cream color finish
+    mat.color.set('#C8A882');
+    // Remove the base dark color map so the beige paint is fully visible
+    mat.map = null;
+    // Keep metalness and roughness values for premium painted metal look
+    mat.metalness = 0.22;
+    mat.roughness = 0.58;
+
+    return mat;
+  }, [materials]);
 
   // Pick material based on variant
   const bodyMaterial = variant === 'beige' ? creamBodyMaterial : materials['moka-pot-material1'];

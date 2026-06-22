@@ -573,6 +573,7 @@ export function ContentOverlay({
         </div>
       </footer>
       {/* 6. ELITE TOP PROGRESS BAR */}
+      {/*
       <div className="fixed top-0 left-0 right-0 h-[2px] bg-white/5 z-50 pointer-events-none">
         <div
           className="h-full bg-linear-to-r from-amber-500 via-rose-500 to-rose-600 transition-transform duration-75 ease-out"
@@ -582,6 +583,7 @@ export function ContentOverlay({
           }}
         />
       </div>
+      */}
 
       {/* 7. ELITE SCROLL INDICATOR (Desktop Only) */}
       <AnimatePresence>
