@@ -77,8 +77,6 @@ export function Scene({ scrollProgress, onHoverPart }: SceneProps) {
           enablePan={false}
           minPolarAngle={Math.PI / 4}
           maxPolarAngle={Math.PI / 1.8}
-          minAzimuthAngle={-Math.PI / 3}
-          maxAzimuthAngle={Math.PI / 3}
           makeDefault
         />
       </Canvas>

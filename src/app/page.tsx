@@ -96,7 +96,7 @@ export default function Home() {
       {/* 3D SCENE BACKGROUND CONTAINER (Pinned & fills screen) */}
       <div
         id="canvas-container"
-        className="fixed inset-0 w-screen h-screen z-0 pointer-events-none md:pointer-events-auto"
+        className="fixed inset-0 w-screen h-screen z-0 pointer-events-auto"
       >
         <Scene scrollProgress={scrollYProgress} onHoverPart={handleHoverPart} />
       </div>
