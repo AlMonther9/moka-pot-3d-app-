@@ -252,9 +252,9 @@ export function ContentOverlay({
                 <p className="text-zinc-400 text-xs sm:text-base leading-relaxed">
                   Crafting the art of Italian coffee since 1933. Scroll down to see the design deconstruct, float, and defy gravity.
                 </p>
-                <div className="hidden sm:flex items-center gap-3 text-[10px] sm:text-xs text-amber-500/80 font-semibold font-mono animate-bounce pt-1">
-                  <span>SCROLL TO DISASSEMBLE</span>
-                  <ArrowRight className="w-4 h-4 rotate-90" />
+                <div className="flex items-center gap-2 text-[10px] text-amber-500/70 font-semibold font-mono animate-pulse pt-1">
+                  <span>Scroll to disassemble</span>
+                  <ArrowRight className="w-3.5 h-3.5 rotate-90" />
                 </div>
 
                 {/* Color variant swatches */}
@@ -569,38 +569,6 @@ export function ContentOverlay({
           }}
         />
       </div>
-
-      {/* 7. ELITE SCROLL INDICATOR */}
-      <AnimatePresence>
-        {scrollProgress < 0.05 && (
-          <motion.div
-            initial={{ opacity: 0, y: 10, x: '-50%' }}
-            animate={{ opacity: 1, y: 0, x: '-50%' }}
-            exit={{ opacity: 0, y: 15, x: '-50%' }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="fixed bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none z-10"
-          >
-            {/* Minimalist interactive mouse/touch pill */}
-            <div className="w-[18px] h-[30px] rounded-full border border-white/20 flex justify-center p-[3px] backdrop-blur-xs shadow-lg">
-              <motion.div
-                animate={{
-                  y: [0, 12, 0],
-                  opacity: [1, 0.4, 1],
-                }}
-                transition={{
-                  duration: 1.8,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-                className="w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_8px_#f59e0b]"
-              />
-            </div>
-            <span className="text-[8px] font-mono tracking-[0.25em] text-zinc-500 uppercase select-none">
-              Scroll
-            </span>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
