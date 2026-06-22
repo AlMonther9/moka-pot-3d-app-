@@ -240,7 +240,7 @@ export function ContentOverlay({
                 className="space-y-2.5 sm:space-y-4"
               >
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[10px] sm:text-xs font-semibold tracking-wider font-mono">
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <Coffee className="w-3.5 h-3.5" />
                   THE DESIGN CLASSIC
                 </div>
                 <h1 className="text-2xl sm:text-6xl font-black text-white tracking-tight leading-none uppercase">
