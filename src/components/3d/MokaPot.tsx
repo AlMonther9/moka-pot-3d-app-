@@ -195,6 +195,9 @@ export function MokaPot({ scrollProgress, onHoverPart, variant = 'dark', xOffset
   const touchStartTime = useRef(0);
   const hasMoved = useRef(false);
   const activePartRef = useRef<string | null>(null);
+  const lastTouchTime = useRef(0);
+  const velocityY = useRef(0);
+  const momentumFrameRef = useRef<number | null>(null);
 
   // Refs for useFrame organic float and mouse reaction
   const baseRef = useRef<THREE.Group>(null);
@@ -521,6 +524,21 @@ export function MokaPot({ scrollProgress, onHoverPart, variant = 'dark', xOffset
     const dom = (events.connected || gl.domElement) as HTMLElement;
     if (!dom) return;
 
+    const animateMomentum = () => {
+      if (Math.abs(velocityY.current) < 0.05) {
+        velocityY.current = 0;
+        return;
+      }
+
+      const scrollAmt = velocityY.current * 16;
+      window.scrollBy(0, scrollAmt);
+
+      // Decelerate smoothly with friction (5% friction per frame)
+      velocityY.current *= 0.95;
+
+      momentumFrameRef.current = requestAnimationFrame(animateMomentum);
+    };
+
     const handleTouchMove = (e: TouchEvent) => {
       if (e.touches.length !== 1) return;
       const touch = e.touches[0];
@@ -545,19 +563,59 @@ export function MokaPot({ scrollProgress, onHoverPart, variant = 'dark', xOffset
         const targetRotX = startRotationX.current + deltaY * sensitivity;
         // Limit vertical rotation to keep the experience intuitive
         rotationX.current = Math.max(-0.6, Math.min(0.6, targetRotX));
+      } else {
+        // Programmatic page scrolling with momentum tracking
+        const currentY = touch.clientY;
+        const diffY = lastY.current - currentY;
+
+        const currentTime = Date.now();
+        const deltaTime = Math.max(1, currentTime - lastTouchTime.current);
+        const instantVelocity = diffY / deltaTime;
+
+        // Exponential smoothing for velocity calculation
+        velocityY.current = velocityY.current * 0.3 + instantVelocity * 0.7;
+
+        lastY.current = currentY;
+        lastTouchTime.current = currentTime;
+
+        if (e.cancelable) {
+          e.preventDefault();
+        }
+
+        // Apply a lighter 1.4x scale factor to make the page feel very responsive
+        window.scrollBy(0, diffY * 1.4);
       }
     };
 
     const handleTouchEnd = (e: TouchEvent) => {
+      if (!isDraggingModel.current && Math.abs(velocityY.current) > 0.1) {
+        animateMomentum();
+      }
       isDraggingModel.current = false;
-      dom.removeEventListener('touchmove', handleTouchMove);
-      dom.removeEventListener('touchend', handleTouchEnd);
     };
 
     const handleTouchStart = (e: TouchEvent) => {
       if (e.touches.length !== 1) return;
 
+      // Ignore touches inside the specification card so it doesn't close
+      const target = e.target as HTMLElement | null;
+      if (target && target.closest('#spec-card')) {
+        return;
+      }
+
+      // Cancel any running momentum scrolls on new touch interaction
+      if (momentumFrameRef.current) {
+        cancelAnimationFrame(momentumFrameRef.current);
+        momentumFrameRef.current = null;
+      }
+      velocityY.current = 0;
+
       const touch = e.touches[0];
+      startX.current = touch.clientX;
+      startY.current = touch.clientY;
+      lastY.current = touch.clientY;
+      lastTouchTime.current = Date.now();
+
       const rect = dom.getBoundingClientRect();
 
       // Normalized device coordinates (-1 to +1)
@@ -593,8 +651,6 @@ export function MokaPot({ scrollProgress, onHoverPart, variant = 'dark', xOffset
       if (hitGrabZone) {
         // User touched the model or the grab shell! Prevent page scrolling, start rotation tracking
         isDraggingModel.current = true;
-        startX.current = touch.clientX;
-        startY.current = touch.clientY;
         startRotationY.current = rotationY.current;
         startRotationX.current = rotationX.current;
         touchStartTime.current = Date.now();
@@ -605,10 +661,6 @@ export function MokaPot({ scrollProgress, onHoverPart, variant = 'dark', xOffset
           // Highlight the part immediately on touch
           handleHoverChange(hitPart);
         }
-
-        // Dynamically attach listeners on model touch (non-passive to prevent scroll)
-        dom.addEventListener('touchmove', handleTouchMove, { passive: false });
-        dom.addEventListener('touchend', handleTouchEnd, { passive: false });
       } else {
         // User touched empty space. Clear highlight and let browser scroll the page.
         isDraggingModel.current = false;
@@ -617,12 +669,17 @@ export function MokaPot({ scrollProgress, onHoverPart, variant = 'dark', xOffset
       }
     };
 
-    dom.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchstart', handleTouchStart, { passive: false });
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('touchend', handleTouchEnd, { passive: false });
 
     return () => {
-      dom.removeEventListener('touchstart', handleTouchStart);
-      dom.removeEventListener('touchmove', handleTouchMove);
-      dom.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+      if (momentumFrameRef.current) {
+        cancelAnimationFrame(momentumFrameRef.current);
+      }
     };
   }, [isMobile, gl, camera, raycaster, events, baseGeo, colGeo]);
 

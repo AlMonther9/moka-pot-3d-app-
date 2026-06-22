@@ -374,6 +374,7 @@ export function ContentOverlay({
         <AnimatePresence>
           {hoveredPartName && hoveredPartData ? (
             <motion.div
+              id="spec-card"
               initial={{ opacity: 0, x: -30, scale: 0.95 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
               exit={{ opacity: 0, x: -30, scale: 0.95 }}
@@ -569,6 +570,38 @@ export function ContentOverlay({
           }}
         />
       </div>
+
+      {/* 7. ELITE SCROLL INDICATOR (Desktop Only) */}
+      <AnimatePresence>
+        {scrollProgress < 0.05 && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, x: '-50%' }}
+            animate={{ opacity: 1, y: 0, x: '-50%' }}
+            exit={{ opacity: 0, y: 15, x: '-50%' }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            className="hidden md:flex fixed bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 pointer-events-none z-10"
+          >
+            {/* Minimalist interactive mouse/touch pill */}
+            <div className="w-[18px] h-[30px] rounded-full border border-white/20 flex justify-center p-[3px] backdrop-blur-xs shadow-lg">
+              <motion.div
+                animate={{
+                  y: [0, 12, 0],
+                  opacity: [1, 0.4, 1],
+                }}
+                transition={{
+                  duration: 1.8,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+                className="w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_8px_#f59e0b]"
+              />
+            </div>
+            <span className="text-[8px] font-mono tracking-[0.25em] text-zinc-500 uppercase select-none">
+              Scroll
+            </span>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
