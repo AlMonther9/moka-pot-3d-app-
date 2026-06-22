@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Coffee, ArrowRight, Activity, Cpu, Sparkles, Layers, X, Volume2, BookOpen, Play, VolumeX } from 'lucide-react';
+import { Coffee, ArrowRight, Activity, Cpu, Sparkles, Layers, X, Volume2, BookOpen, Play, VolumeX, Sun, Moon } from 'lucide-react';
 
 interface PartMetadata {
   title: string;
@@ -30,6 +30,12 @@ export function ContentOverlay({
   };
 
   const activeSection = getActiveSection();
+
+  // Theme toggle
+  const [isLight, setIsLight] = useState(false);
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+  }, [isLight]);
 
   // Modals state & procedural sound simulation
   const [activeModal, setActiveModal] = useState<'history' | 'acoustics' | null>(null);
@@ -145,16 +151,36 @@ export function ContentOverlay({
           </div>
         </motion.div>
 
-        {/* Engine Pill */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.1 }}
-          className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-md bg-white/5 border border-white/10"
-        >
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-[10px] text-zinc-400 font-mono tracking-widest uppercase">Engine: R3F + Framer 3D</span>
-        </motion.div>
+        {/* Right controls */}
+        <div className="flex items-center gap-3">
+          {/* Engine Pill */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-md"
+            style={{ background: 'var(--pill-bg)', border: '1px solid var(--pill-border)' }}
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[10px] font-mono tracking-widest uppercase" style={{ color: 'var(--text-secondary)' }}>Engine: R3F + Framer 3D</span>
+          </motion.div>
+
+          {/* Theme Toggle */}
+          <motion.button
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            onClick={() => setIsLight(v => !v)}
+            className="w-9 h-9 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 cursor-pointer"
+            style={{ background: 'var(--pill-bg)', border: '1px solid var(--pill-border)' }}
+            aria-label="Toggle theme"
+          >
+            {isLight
+              ? <Moon className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
+              : <Sun className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
+            }
+          </motion.button>
+        </div>
       </header>
 
       {/* 2. SIDE NAVIGATION DOTS */}

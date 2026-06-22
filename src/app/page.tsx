@@ -47,7 +47,8 @@ export default function Home() {
   return (
     <main
       ref={containerRef}
-      className="relative w-full min-h-[400vh] bg-[#070a13] text-white font-sans overflow-x-hidden"
+      className="relative w-full min-h-[400vh] text-white font-sans overflow-x-hidden"
+      style={{ background: 'var(--bg)', color: 'var(--text-primary)' }}
     >
       {/* Premium Loader */}
       <AnimatePresence>
@@ -56,7 +57,8 @@ export default function Home() {
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.8, ease: 'easeInOut' }}
-            className="fixed inset-0 bg-[#070a13] z-50 flex flex-col items-center justify-center gap-6"
+            className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 transition-colors duration-400"
+            style={{ background: 'var(--bg)' }}
           >
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
