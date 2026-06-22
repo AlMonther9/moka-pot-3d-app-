@@ -100,6 +100,7 @@ export default function Home() {
       <div
         id="canvas-container"
         className="fixed inset-0 w-screen h-screen z-0 pointer-events-auto"
+        style={{ touchAction: 'pan-y' }}
       >
         <Scene scrollProgress={scrollYProgress} onHoverPart={handleHoverPart} variant={selectedVariant} />
       </div>
