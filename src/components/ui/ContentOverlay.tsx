@@ -35,6 +35,14 @@ export function ContentOverlay({
 
   const activeSection = getActiveSection();
 
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.matchMedia('(max-width: 768px)').matches || ('ontouchstart' in window));
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   // Theme toggle
   const [isLight, setIsLight] = useState(false);
   useEffect(() => {
@@ -329,7 +337,11 @@ export function ContentOverlay({
                   </span>
                 </h2>
                 <p className="text-zinc-400 text-xs sm:text-base leading-relaxed">
-                  Hover over the floating parts to inspect materials and micro-mechanics. Rotate and tilt the view using your mouse.
+                  {isMobile ? (
+                    "Tap on the floating parts to inspect materials and micro-mechanics. Swipe and drag to rotate the view."
+                  ) : (
+                    "Hover over the floating parts to inspect materials and micro-mechanics. Rotate and tilt the view using your mouse."
+                  )}
                 </p>
               </motion.div>
             )}
