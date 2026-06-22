@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://almonther.studio"),
+  metadataBase: new URL("https://moka-pot-3d.vercel.app"),
   title: "Bialetti Moka Express - Interactive 3D Experience",
   description: "Explore the deconstructed engineering, thermodynamics, and design physics of the iconic Italian Bialetti Moka Pot in an interactive 3D anti-gravity experience.",
   icons: {

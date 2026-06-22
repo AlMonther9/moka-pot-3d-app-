@@ -77,6 +77,17 @@ export default function Home() {
                 <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-500" />
                 Calibrating 3D Physics Engine...
               </p>
+              <p className="text-[10px] font-mono text-zinc-600 tracking-widest">
+                by{' '}
+                <a
+                  href="https://almonther.studio/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-amber-500/70 hover:text-amber-400 transition-colors"
+                >
+                  Almonther
+                </a>
+              </p>
             </div>
           </motion.div>
         )}
