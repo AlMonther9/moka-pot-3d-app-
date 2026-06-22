@@ -134,54 +134,27 @@ export function ContentOverlay({
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
+          className="flex items-center gap-3"
         >
-          <a
-            href="https://almonther.studio/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-3 hover:opacity-95 transition-opacity"
-          >
-            <div className="w-11 h-11 rounded-xl bg-black/40 border border-white/10 shadow-lg flex items-center justify-center p-1.5 backdrop-blur-sm">
-              <img src="/moka_logo.png" alt="Moka Pot Logo" className="w-full h-full object-contain" />
-            </div>
-            <div>
-              <span className="text-white font-bold tracking-widest text-lg font-sans leading-none block">BIALETTI</span>
-              <span className="text-amber-500 text-[9px] font-bold block tracking-widest uppercase mt-0.5">BY ALMONTHER / LABS</span>
-            </div>
-          </a>
+          <div className="w-11 h-11 rounded-xl bg-black/40 border border-white/10 shadow-lg flex items-center justify-center p-1.5 backdrop-blur-sm">
+            <img src="/moka_logo.png" alt="Moka Pot Logo" className="w-full h-full object-contain" />
+          </div>
+          <div>
+            <span className="text-white font-bold tracking-widest text-lg font-sans leading-none block">BIALETTI</span>
+            <span className="text-amber-500 text-[9px] font-bold block tracking-widest uppercase mt-0.5">LABS // 3D</span>
+          </div>
         </motion.div>
 
-        {/* Top-right Status Pills */}
-        <div className="flex items-center gap-3">
-          {/* Engine Pill */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="hidden lg:flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-md bg-white/5 border border-white/10"
-          >
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-[10px] text-zinc-400 font-mono tracking-widest uppercase">Engine: R3F + Framer 3D</span>
-          </motion.div>
-
-          {/* Personal Pill */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-md bg-white/5 border border-white/10"
-          >
-            <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
-            <a
-              href="https://almonther.studio/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[10px] text-zinc-400 font-mono tracking-widest uppercase hover:text-rose-400 transition-colors"
-            >
-              My Bialetti Lab // Made with ♥
-            </a>
-          </motion.div>
-        </div>
+        {/* Engine Pill */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-md bg-white/5 border border-white/10"
+        >
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="text-[10px] text-zinc-400 font-mono tracking-widest uppercase">Engine: R3F + Framer 3D</span>
+        </motion.div>
       </header>
 
       {/* 2. SIDE NAVIGATION DOTS */}
@@ -328,20 +301,14 @@ export function ContentOverlay({
                 <p className="text-zinc-400 text-xs sm:text-base leading-relaxed">
                   A perfect union of physics, thermodynamics, and aesthetic design. Brew espresso at home that honors Italian tradition.
                 </p>
-                <div className="pt-1.5 flex items-center gap-4">
-                  <a
-                    id="cta-portfolio"
-                    href="https://almonther.studio/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group relative flex items-center gap-2.5 sm:gap-3 px-4 py-2.5 sm:px-6 sm:py-3.5 bg-linear-to-r from-amber-500 to-rose-500 text-white text-xs sm:text-sm font-bold rounded-xl shadow-lg shadow-rose-500/20 hover:shadow-rose-500/30 transition-all duration-300 transform hover:-translate-y-0.5 pointer-events-auto"
+                <div className="pt-1.5">
+                  <button
+                    id="cta-restart"
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                    className="group relative flex items-center gap-2.5 sm:gap-3 px-4 py-2.5 sm:px-6 sm:py-3.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white text-xs sm:text-sm font-bold rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer pointer-events-auto backdrop-blur-md"
                   >
-                    <span>View My Work</span>
-                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                  </a>
-                  <span className="text-[10px] font-mono text-zinc-600 tracking-widest uppercase hidden sm:block">
-                    almonther.studio
-                  </span>
+                    <span className="text-zinc-300">↺ Restart Experience</span>
+                  </button>
                 </div>
               </motion.div>
             )}
