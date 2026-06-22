@@ -304,7 +304,7 @@ export function ContentOverlay({
                 <button
                   id="cta-restart"
                   onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                  className="flex items-center gap-2 text-[10px] sm:text-xs text-amber-500/70 font-semibold font-mono tracking-widest uppercase hover:text-amber-400 transition-colors cursor-pointer pointer-events-auto pt-1"
+                  className="flex items-center gap-2 text-[10px] sm:text-xs text-amber-500/70 font-semibold font-mono tracking-widest uppercase hover:text-amber-400 transition-colors cursor-pointer pointer-events-auto pt-1 animate-pulse"
                 >
                   <span>↺ Restart Experience</span>
                 </button>
