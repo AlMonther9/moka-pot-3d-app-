@@ -591,7 +591,7 @@ export function ContentOverlay({
             animate={{ opacity: 1, y: 0, x: '-50%' }}
             exit={{ opacity: 0, y: 15, x: '-50%' }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="hidden md:flex fixed bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 pointer-events-none z-10"
+            className="flex fixed bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 pointer-events-none z-10"
           >
             {/* Minimalist interactive mouse/touch pill */}
             <div className="w-[18px] h-[30px] rounded-full border border-white/20 flex justify-center p-[3px] backdrop-blur-xs shadow-lg">
