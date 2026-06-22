@@ -140,7 +140,7 @@ export function ContentOverlay({
             <img src="/moka_logo.png" alt="Moka Pot Logo" className="w-full h-full object-contain" />
           </div>
           <div>
-            <span className="text-white font-bold tracking-widest text-lg font-sans leading-none block">BIALETTI</span>
+            <span className="text-white font-bold tracking-widest text-lg font-sans leading-none block">ALMONTHER</span>
             <span className="text-amber-500 text-[9px] font-bold block tracking-widest uppercase mt-0.5">LABS // 3D</span>
           </div>
         </motion.div>
@@ -198,7 +198,7 @@ export function ContentOverlay({
 
       {/* 3. CENTER / BOTTOM CONTENT PANEL (Responsive Layout) */}
       <div className="w-full grow flex flex-col justify-end max-w-xl pointer-events-none">
-        <div className="relative min-h-[180px] sm:min-h-[260px] flex flex-col justify-end pb-8 sm:pb-16">
+        <div className="relative min-h-[180px] sm:min-h-[260px] flex flex-col justify-end pb-12 sm:pb-20">
           <AnimatePresence mode="wait">
             {activeSection === 0 && (
               <motion.div
