@@ -1,0 +1,407 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 459,
+      "max": [
+        0.04440457373857498,
+        0.006430576555430889,
+        0.03331759199500084
+      ],
+      "min": [
+        -0.04440457373857498,
+        -0.11036546528339386,
+        -0.006430610548704863
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 5508,
+      "componentType": 5126,
+      "count": 459,
+      "max": [
+        1.0,
+        0.9807782173156738,
+        0.9999655485153198
+      ],
+      "min": [
+        -1.0,
+        -0.9807782173156738,
+        -0.9742845892906189
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 459,
+      "max": [
+        0.9444651007652283,
+        0.9999642968177795,
+        0.9862061738967896,
+        1.0
+      ],
+      "min": [
+        -0.9445515871047974,
+        -0.9636019468307495,
+        -1.0,
+        -1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 459,
+      "max": [
+        0.7238472700119019,
+        0.955021321773529
+      ],
+      "min": [
+        0.15965966880321503,
+        0.0003649440477602184
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 1914,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 11016,
+      "componentType": 5126,
+      "count": 785,
+      "max": [
+        0.045431237667798996,
+        0.08822833001613617,
+        0.13941724598407745
+      ],
+      "min": [
+        -0.045431237667798996,
+        -0.06716914474964142,
+        -0.024189947172999382
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 20436,
+      "componentType": 5126,
+      "count": 785,
+      "max": [
+        0.9980777502059937,
+        0.9981593489646912,
+        1.0
+      ],
+      "min": [
+        -0.9954010248184204,
+        -1.0,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 7344,
+      "componentType": 5126,
+      "count": 785,
+      "max": [
+        1.0,
+        0.9814065098762512,
+        0.9678913950920105,
+        1.0
+      ],
+      "min": [
+        -0.9992566108703613,
+        -1.0,
+        -0.9822893738746643,
+        1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 3672,
+      "componentType": 5126,
+      "count": 785,
+      "max": [
+        0.9996350407600403,
+        0.9597232341766357
+      ],
+      "min": [
+        0.0003649440477602184,
+        0.011977553367614746
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 7656,
+      "componentType": 5125,
+      "count": 3408,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "Kuba Wójcik (https://sketchfab.com/KWojcik)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/moka-pot-963c5f8b81c045fcab90387bf3aa5143",
+      "title": "Moka Pot"
+    },
+    "generator": "Sketchfab-12.67.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 21288,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 9952,
+      "byteOffset": 21288,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 29856,
+      "byteOffset": 31240,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 19904,
+      "byteOffset": 61096,
+      "byteStride": 16,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 81000,
+      "uri": "scene.bin"
+    }
+  ],
+  "images": [
+    {
+      "uri": "textures/moka-pot-material1_baseColor.png"
+    },
+    {
+      "uri": "textures/moka-pot-material1_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/moka-pot-material1_normal.png"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "name": "moka-pot-material1",
+      "normalTexture": {
+        "index": 2
+      },
+      "occlusionTexture": {
+        "index": 1
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 1
+        }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "moka-pot_cover_moka-pot-material1_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TANGENT": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "moka-pot_base_moka-pot-material1_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 6,
+            "POSITION": 5,
+            "TANGENT": 7,
+            "TEXCOORD_0": 8
+          },
+          "indices": 9,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        0.010010408237576485,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.2227571422509495e-18,
+        -0.010010408237576485,
+        0.0,
+        0.0,
+        0.010010408237576485,
+        2.2227571422509495e-18,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        -1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "moka-pot.fbx"
+    },
+    {
+      "children": [
+        3,
+        5
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        4
+      ],
+      "matrix": [
+        100.0,
+        1.570092696510583e-14,
+        -6.503536836119751e-15,
+        0.0,
+        6.50354126261339e-15,
+        -70.71070079379817,
+        -70.71066623310033,
+        0.0,
+        -1.570092653500192e-14,
+        70.71066623310033,
+        -70.71070079379817,
+        0.0,
+        -1.101228968726037e-30,
+        15.595540046691895,
+        -5.4531097412109375,
+        1.0
+      ],
+      "name": "moka-pot_cover"
+    },
+    {
+      "mesh": 0,
+      "name": "moka-pot_cover_moka-pot-material1_0"
+    },
+    {
+      "children": [
+        6
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.629206793918314e-05,
+        -99.99999999999868,
+        0.0,
+        0.0,
+        99.99999999999868,
+        -1.629206793918314e-05,
+        0.0,
+        0.0,
+        2.4189934730529785,
+        0.0,
+        1.0
+      ],
+      "name": "moka-pot_base"
+    },
+    {
+      "mesh": 1,
+      "name": "moka-pot_base_moka-pot-material1_0"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    }
+  ]
+}

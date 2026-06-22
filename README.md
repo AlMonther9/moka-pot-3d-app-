@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Moka Express 3D — Bialetti Lab Tribute
 
-## Getting Started
+An immersive, premium 3D interactive landing page showcasing the engineering, history, and physics of the iconic 1933 Italian Moka Express coffee maker. Developed as a high-fidelity interactive portfolio showcase.
 
-First, run the development server:
+🌐 **Live Portfolio:** [almonther.studio](https://almonther.studio/)
+
+---
+
+## ⚙️ Technical Architecture & Design Decisions
+
+### 1. 3D Rendering & Exploded View Engine
+*   **Frameworks:** React Three Fiber (R3F), `@react-three/drei`, and `Three.js`.
+*   **Scroll-Linked Splitting:** Procedural geometry splitting decouples the boiler, gasket, filter plate, funnel, and collector. As the user scrolls, the components disassemble on the Y-axis using interpolated scroll metrics, exposing the inner chambers of the pot.
+*   **Intro Grab Teaser:** A mount-aware intro animation simulates a swipe-right interaction, pulling the user's focus onto the model and introducing its 3D interactive capabilities.
+*   **Materials & Lights:** Custom physical materials with realistic metallic roughness, brass elements, matte silicone gaskets, and coffee beans, illuminated by a dynamic studio lighting setup with soft shadows.
+
+### 2. High-Fidelity Gasket & Filter Micro-Texture
+*   **Planar Canvas Texture:** Built a dynamic canvas-based texture generator for the gasket filter plate to eliminate radial/specular rendering artifacts. Instead of using complex shaders or massive image files, the canvas renders a clean grid of micro-perforated holes programmatically to create a premium finish.
+
+### 3. Procedural Steam Acoustic Simulator
+*   **Web Audio API:** The sound simulator synthesizes escaping steam pressure in real-time, avoiding heavy external audio files.
+*   **Sound Synthesis Pipe:**
+    *   **White Noise Generator:** Feeds random audio data to simulate high-pressure steam.
+    *   **Biquad Filters:** Shapes the steam hiss with a bandpass filter (resonance around 3200Hz) and high-pass filter (above 1800Hz) to create a clean, continuous steam hiss.
+    *   **Linear Gain Ramp:** Smoothly fades the sound in and out to prevent popping.
+*   **Vibrating Line UI:** An organic horizontal waveform constructed from 30 vertical bar elements. When active, it uses longhand CSS keyframes with index-based deterministic animation durations and delays to vibrate like a real audio spectrum.
+
+### 4. Interactive Specifications Overlay
+*   **Mouse/Touch Hover Raycasting:** Hovering over individual floating parts triggers a raycast check, pulling material specs, description copy, and technical details into a glassmorphic technical overlay card.
+*   **Lightweight Modals:** Anchored non-blocking popover panels sitting above the footer links for History and Acoustics, allowing continuous background interaction with the 3D scene. Featuring a click-outside detection handler.
+
+---
+
+## 📁 Repository Structure
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+moka-pot-app/
+├── public/                 # Static assets (clean line-art logo)
+├── src/
+│   ├── app/
+│   │   ├── page.tsx        # Entry point containing the Canvas and Overlay UI
+│   │   └── layout.tsx      # Fonts (Inter, Outfit, JetBrains Mono) & metadata
+│   ├── components/
+│   │   ├── 3d/
+│   │   │   ├── Scene.tsx   # Canvas environment lighting & shadow setup
+│   │   │   └── MokaPot.tsx # Part separation, coffee beans, and materials
+│   │   └── ui/
+│   │       └── ContentOverlay.tsx # Header, status pills, popovers, and Audio Engine
+└── tailwind.config.ts      # Custom Tailwind styling & gradients
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Getting Started
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. Installation
+Install the project dependencies:
+```bash
+npm install
+```
 
-## Learn More
+### 2. Running Locally
+Launch the development server:
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-To learn more about Next.js, take a look at the following resources:
+### 3. Production Build
+Build and optimize for production deployment:
+```bash
+npm run build
+npm run start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🛠️ Tech Stack
+*   **Core:** Next.js (App Router), TypeScript, Tailwind CSS
+*   **3D Graphics:** React Three Fiber, Three.js, `@react-three/drei`
+*   **Animations:** Framer Motion, Framer Motion 3D
+*   **Audio Synthesis:** Native Web Audio API
+*   **Fonts:** Outfit (headings), Inter (body copy), JetBrains Mono (technical specifications)
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+> Made with ♥ by [Almonther](https://almonther.studio/)
