@@ -145,21 +145,21 @@ export function ContentOverlay({
   ];
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-10 flex flex-col justify-between p-6 sm:p-12 select-none w-screen h-screen">
+    <div className="fixed inset-0 pointer-events-none z-10 flex flex-col justify-between p-4 sm:p-12 select-none w-screen h-screen">
       {/* 1. HEADER */}
       <header className="w-full flex justify-between items-center pointer-events-auto">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="flex items-center gap-3"
+          className="flex items-center gap-2 sm:gap-3"
         >
-          <div className="w-11 h-11 rounded-xl bg-black/40 border border-white/10 shadow-lg flex items-center justify-center p-1.5 backdrop-blur-sm">
+          <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-black/40 border border-white/10 shadow-lg flex items-center justify-center p-1 sm:p-1.5 backdrop-blur-sm">
             <img src="/moka_logo.png" alt="Moka Pot Logo" className="w-full h-full object-contain" />
           </div>
           <div>
-            <span className="text-white font-bold tracking-widest text-lg font-sans leading-none block">BIALETTI</span>
-            <span className="text-amber-500 text-[9px] font-bold block tracking-widest uppercase mt-0.5">Almonther LABS // 3D</span>
+            <span className="text-white font-bold tracking-widest text-sm sm:text-lg font-sans leading-none block">BIALETTI</span>
+            <span className="text-amber-500 text-[7px] sm:text-[9px] font-bold block tracking-widest uppercase mt-0.5">Almonther LABS // 3D</span>
           </div>
         </motion.div>
 
