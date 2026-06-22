@@ -14,12 +14,16 @@ interface ContentOverlayProps {
   scrollProgress: number;
   hoveredPartName: string | null;
   hoveredPartData: PartMetadata | null;
+  selectedVariant: 'dark' | 'beige';
+  onVariantChange: (v: 'dark' | 'beige') => void;
 }
 
 export function ContentOverlay({
   scrollProgress,
   hoveredPartName,
   hoveredPartData,
+  selectedVariant,
+  onVariantChange,
 }: ContentOverlayProps) {
   // Determine current active section based on scroll progress (0 to 1)
   const getActiveSection = () => {
@@ -251,6 +255,31 @@ export function ContentOverlay({
                 <div className="flex items-center gap-3 text-[10px] sm:text-xs text-amber-500/80 font-semibold font-mono animate-bounce pt-1">
                   <span>SCROLL TO DISASSEMBLE</span>
                   <ArrowRight className="w-4 h-4 rotate-90" />
+                </div>
+
+                {/* Color variant swatches */}
+                <div className="flex items-center gap-3 pt-2">
+                  <span className="text-[10px] font-mono text-zinc-600 tracking-widest uppercase">Finish</span>
+                  <button
+                    onClick={() => onVariantChange('dark')}
+                    title="Dark Metallic"
+                    className="w-5 h-5 rounded-full border-2 transition-all duration-200 cursor-pointer pointer-events-auto"
+                    style={{
+                      background: '#2a2a2a',
+                      borderColor: selectedVariant === 'dark' ? '#f59e0b' : 'transparent',
+                      boxShadow: selectedVariant === 'dark' ? '0 0 0 1px #f59e0b' : 'none',
+                    }}
+                  />
+                  <button
+                    onClick={() => onVariantChange('beige')}
+                    title="Sandy Beige"
+                    className="w-5 h-5 rounded-full border-2 transition-all duration-200 cursor-pointer pointer-events-auto"
+                    style={{
+                      background: '#C8A882',
+                      borderColor: selectedVariant === 'beige' ? '#f59e0b' : 'transparent',
+                      boxShadow: selectedVariant === 'beige' ? '0 0 0 1px #f59e0b' : 'none',
+                    }}
+                  />
                 </div>
               </motion.div>
             )}

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { motion } from 'framer-motion-3d';
 import { useTransform, useSpring } from 'framer-motion';
 import { useGLTF } from '@react-three/drei';
@@ -167,13 +167,33 @@ const CoffeeBean = ({ position: initialPos, randomRotation, speed, orbitRadius, 
 interface MokaPotProps {
   scrollProgress: any;
   onHoverPart?: (partName: string | null, metadata: PartMetadata | null) => void;
+  variant?: 'dark' | 'beige';
+  xOffset?: number;
+  isMobile?: boolean;
 }
 
-export function MokaPot({ scrollProgress, onHoverPart }: MokaPotProps) {
+export function MokaPot({ scrollProgress, onHoverPart, variant = 'dark', xOffset = 0, isMobile = false }: MokaPotProps) {
   const [activeHover, setActiveHover] = useState<string | null>(null);
 
   // Load user's high-quality Moka Pot model
   const { nodes, materials } = useGLTF('/moka_pot/scene.gltf') as any;
+
+  const { gl, camera, scene, raycaster, events } = useThree();
+
+  // Custom swipe/grab rotation refs for mobile
+  const rotationY = useRef(0);
+  const rotationX = useRef(0);
+  const currentRotationY = useRef(0);
+  const currentRotationX = useRef(0);
+
+  const isDraggingModel = useRef(false);
+  const startX = useRef(0);
+  const startY = useRef(0);
+  const startRotationY = useRef(0);
+  const startRotationX = useRef(0);
+  const touchStartTime = useRef(0);
+  const hasMoved = useRef(false);
+  const activePartRef = useRef<string | null>(null);
 
   // Refs for useFrame organic float and mouse reaction
   const baseRef = useRef<THREE.Group>(null);
@@ -220,6 +240,7 @@ export function MokaPot({ scrollProgress, onHoverPart }: MokaPotProps) {
     const scale = aspect < 1 ? 8.5 : 12.0;
     if (parentRef.current) {
       parentRef.current.scale.set(scale, scale, scale);
+      parentRef.current.position.x = xOffset;
 
       // B. Dynamic Y translation of parent group to keep the center of deconstructed pot exactly at Y = 0
       const localCenter = THREE.MathUtils.lerp(0.09, 0.154, scrollVal);
@@ -235,8 +256,18 @@ export function MokaPot({ scrollProgress, onHoverPart }: MokaPotProps) {
         teaserY = -0.7 * easeOut;
         teaserX = 0.12 * easeOut;
       }
-      parentRef.current.rotation.y = teaserY;
-      parentRef.current.rotation.x = teaserX;
+
+      if (isMobile) {
+        // Smoothly interpolate rotation for high-end inertia feel
+        currentRotationY.current += (rotationY.current - currentRotationY.current) * 0.12;
+        currentRotationX.current += (rotationX.current - currentRotationX.current) * 0.12;
+
+        parentRef.current.rotation.y = teaserY + currentRotationY.current;
+        parentRef.current.rotation.x = teaserX + currentRotationX.current;
+      } else {
+        parentRef.current.rotation.y = teaserY;
+        parentRef.current.rotation.x = teaserX;
+      }
     }
 
     // C. Dynamic camera zoom (Z-axis) and vertical position (Y-axis) to frame the pot as it explodes
@@ -347,24 +378,36 @@ export function MokaPot({ scrollProgress, onHoverPart }: MokaPotProps) {
     }
   };
 
-  // Materials definitions for procedural parts and highlights
+  // Beige painted aluminum body — warm sandy tone
+  const creamBodyMaterial = React.useMemo(() => new THREE.MeshStandardMaterial({
+    color: new THREE.Color('#C8A882'),
+    metalness: 0.20,
+    roughness: 0.60,
+  }), []);
+
+  // Pick material based on variant
+  const bodyMaterial = variant === 'beige' ? creamBodyMaterial : materials['moka-pot-material1'];
+
+  // Brushed steel for internal filter parts
   const metalMaterial = React.useMemo(() => new THREE.MeshStandardMaterial({
-    color: "#e2e8f0",
+    color: '#d4d8df',
     metalness: 0.92,
     roughness: 0.18,
   }), []);
 
+  // Warm silicone gasket
   const gasketMaterial = React.useMemo(() => new THREE.MeshStandardMaterial({
-    color: "#f4f4f5",
-    metalness: 0.05,
-    roughness: 0.8,
+    color: '#D9D0C4',  // warm light grey silicone
+    metalness: 0.04,
+    roughness: 0.82,
   }), []);
 
+
   const activeHoverMaterial = React.useMemo(() => new THREE.MeshStandardMaterial({
-    color: "#f43f5e",
+    color: '#f43f5e',
     metalness: 0.5,
     roughness: 0.1,
-    emissive: "#f43f5e",
+    emissive: '#f43f5e',
     emissiveIntensity: 0.5,
   }), []);
 
@@ -449,23 +492,161 @@ export function MokaPot({ scrollProgress, onHoverPart }: MokaPotProps) {
     return beans;
   }, []);
 
+  const getPartNameFromMesh = (object: THREE.Object3D): string | null => {
+    let current: THREE.Object3D | null = object;
+    while (current) {
+      if (current.name === 'grab-shell') return null; // Ignore grab shell for part detection
+      if (current === baseRef.current || current.name === 'base') return 'base';
+      if (current === filterRef.current || current.name === 'filter') return 'filter';
+      if (current === gasketRef.current || current.name === 'gasket') return 'gasket';
+      if (current === collectorRef.current || current.name === 'collector') return 'collector';
+      
+      // Fallback checks using geometry reference or name properties
+      if (current instanceof THREE.Mesh) {
+        if (current.geometry === baseGeo) return 'base';
+        if (current.geometry === colGeo) return 'collector';
+      }
+      if (current.name.includes('base') || current.name.includes('geometry_0')) return 'base';
+      if (current.name.includes('cover') || current.name.includes('lid') || current.name.includes('collector')) return 'collector';
+      
+      current = current.parent;
+    }
+    return null;
+  };
+
+  React.useEffect(() => {
+    if (!isMobile) return;
+
+    const dom = (events.connected || gl.domElement) as HTMLElement;
+    if (!dom) return;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length !== 1) return;
+
+      const touch = e.touches[0];
+      const rect = dom.getBoundingClientRect();
+
+      // Normalized device coordinates (-1 to +1)
+      const mouse = new THREE.Vector2(
+        ((touch.clientX - rect.left) / rect.width) * 2 - 1,
+        -((touch.clientY - rect.top) / rect.height) * 2 + 1
+      );
+
+      raycaster.setFromCamera(mouse, camera);
+      
+      // Intersect only with our pot's parent group to ignore other elements
+      if (!parentRef.current) return;
+      const intersects = raycaster.intersectObject(parentRef.current, true);
+
+      // Find if we hit a grab shell or a direct mesh part
+      let hitGrabZone = false;
+      let hitPart: string | null = null;
+      for (const hit of intersects) {
+        if (hit.object.type === 'Mesh') {
+          if (hit.object.name === 'grab-shell') {
+            hitGrabZone = true;
+            continue; // Keep checking in case we hit a direct mesh underneath
+          }
+          const part = getPartNameFromMesh(hit.object);
+          if (part) {
+            hitPart = part;
+            hitGrabZone = true;
+            break; // Direct hit takes priority
+          }
+        }
+      }
+
+      if (hitGrabZone) {
+        // User touched the model or the grab shell! Prevent page scrolling, start rotation tracking
+        isDraggingModel.current = true;
+        startX.current = touch.clientX;
+        startY.current = touch.clientY;
+        startRotationY.current = rotationY.current;
+        startRotationX.current = rotationX.current;
+        touchStartTime.current = Date.now();
+        hasMoved.current = false;
+        
+        if (hitPart) {
+          activePartRef.current = hitPart;
+          // Highlight the part immediately on touch
+          handleHoverChange(hitPart);
+        }
+      } else {
+        // User touched empty space. Clear highlight and let browser scroll the page.
+        isDraggingModel.current = false;
+        handleHoverChange(null);
+        activePartRef.current = null;
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isDraggingModel.current) return;
+
+      // Prevent the page from scrolling while interacting with the 3D model
+      if (e.cancelable) {
+        e.preventDefault();
+      }
+
+      if (e.touches.length !== 1) return;
+      const touch = e.touches[0];
+
+      const deltaX = touch.clientX - startX.current;
+      const deltaY = touch.clientY - startY.current;
+
+      if (Math.abs(deltaX) > 4 || Math.abs(deltaY) > 4) {
+        hasMoved.current = true;
+      }
+
+      // Rotate model: horizontal swipe rotates Y, vertical swipe rotates X (limited)
+      const sensitivity = 0.008;
+      rotationY.current = startRotationY.current + deltaX * sensitivity;
+      
+      const targetRotX = startRotationX.current + deltaY * sensitivity;
+      // Limit vertical rotation to keep the experience intuitive
+      rotationX.current = Math.max(-0.6, Math.min(0.6, targetRotX));
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      isDraggingModel.current = false;
+    };
+
+    dom.addEventListener('touchstart', handleTouchStart, { passive: false });
+    dom.addEventListener('touchmove', handleTouchMove, { passive: false });
+    dom.addEventListener('touchend', handleTouchEnd, { passive: false });
+
+    return () => {
+      dom.removeEventListener('touchstart', handleTouchStart);
+      dom.removeEventListener('touchmove', handleTouchMove);
+      dom.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [isMobile, gl, camera, raycaster, events, baseGeo, colGeo]);
+
   return (
     <group ref={parentRef}>
+      {/* Invisible shell for easier grabbing/swiping on mobile */}
+      <mesh
+        name="grab-shell"
+        position={[0, 0.08, 0]}
+      >
+        <cylinderGeometry args={[0.09, 0.09, 0.45, 16]} />
+        <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+      </mesh>
+
       {/* 1. BASE (Heating Chamber) */}
       <motion.group {...({ y: baseY } as any)}>
         <group ref={baseRef}>
           <mesh
             geometry={baseGeo}
-            material={activeHover === 'base' ? activeHoverMaterial : materials['moka-pot-material1']}
+            material={activeHover === 'base' ? activeHoverMaterial : bodyMaterial}
             position={[0, 0.02419, 0]}
             rotation={[-Math.PI / 2, 0, 0]}
             castShadow
             receiveShadow
-            onPointerOver={(e) => {
+            onPointerOver={isMobile ? undefined : (e) => {
               e.stopPropagation();
               handleHoverChange('base');
             }}
-            onPointerOut={(e) => {
+            onPointerOut={isMobile ? undefined : (e) => {
               e.stopPropagation();
               handleHoverChange(null);
             }}
@@ -477,11 +658,11 @@ export function MokaPot({ scrollProgress, onHoverPart }: MokaPotProps) {
       <motion.group {...({ y: filterY } as any)}>
         <group ref={filterRef}>
           <group
-            onPointerOver={(e) => {
+            onPointerOver={isMobile ? undefined : (e) => {
               e.stopPropagation();
               handleHoverChange('filter');
             }}
-            onPointerOut={(e) => {
+            onPointerOut={isMobile ? undefined : (e) => {
               e.stopPropagation();
               handleHoverChange(null);
             }}
@@ -519,11 +700,11 @@ export function MokaPot({ scrollProgress, onHoverPart }: MokaPotProps) {
           <mesh
             position={[0, 0, 0]}
             material={activeHover === 'gasket' ? activeHoverMaterial : gasketMaterial}
-            onPointerOver={(e) => {
+            onPointerOver={isMobile ? undefined : (e) => {
               e.stopPropagation();
               handleHoverChange('gasket');
             }}
-            onPointerOut={(e) => {
+            onPointerOut={isMobile ? undefined : (e) => {
               e.stopPropagation();
               handleHoverChange(null);
             }}
@@ -536,11 +717,11 @@ export function MokaPot({ scrollProgress, onHoverPart }: MokaPotProps) {
             <mesh
               rotation={[-Math.PI / 2, 0, 0]}
               material={activeHover === 'gasket' ? activeHoverMaterial : filterPlateMaterial}
-              onPointerOver={(e) => {
+              onPointerOver={isMobile ? undefined : (e) => {
                 e.stopPropagation();
                 handleHoverChange('gasket');
               }}
-              onPointerOut={(e) => {
+              onPointerOut={isMobile ? undefined : (e) => {
                 e.stopPropagation();
                 handleHoverChange(null);
               }}
@@ -565,16 +746,16 @@ export function MokaPot({ scrollProgress, onHoverPart }: MokaPotProps) {
           {/* Main Upper Chamber (Split from the base geometry) */}
           <mesh
             geometry={colGeo}
-            material={activeHover === 'collector' ? activeHoverMaterial : materials['moka-pot-material1']}
+            material={activeHover === 'collector' ? activeHoverMaterial : bodyMaterial}
             position={[0, 0.02419, 0]}
             rotation={[-Math.PI / 2, 0, 0]}
             castShadow
             receiveShadow
-            onPointerOver={(e) => {
+            onPointerOver={isMobile ? undefined : (e) => {
               e.stopPropagation();
               handleHoverChange('collector');
             }}
-            onPointerOut={(e) => {
+            onPointerOut={isMobile ? undefined : (e) => {
               e.stopPropagation();
               handleHoverChange(null);
             }}
@@ -582,20 +763,21 @@ export function MokaPot({ scrollProgress, onHoverPart }: MokaPotProps) {
           {/* Lid (Original cover mesh) */}
           <mesh
             geometry={nodes['moka-pot_cover_moka-pot-material1_0'].geometry}
-            material={activeHover === 'collector' ? activeHoverMaterial : materials['moka-pot-material1']}
+            material={activeHover === 'collector' ? activeHoverMaterial : bodyMaterial}
             position={[0, 0.15596, -0.05453]}
             rotation={[-2.356, 0, 0]}
             castShadow
             receiveShadow
-            onPointerOver={(e) => {
+            onPointerOver={isMobile ? undefined : (e) => {
               e.stopPropagation();
               handleHoverChange('collector');
             }}
-            onPointerOut={(e) => {
+            onPointerOut={isMobile ? undefined : (e) => {
               e.stopPropagation();
               handleHoverChange(null);
             }}
           />
+
         </group>
       </motion.group>
 

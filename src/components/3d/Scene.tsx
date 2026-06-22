@@ -8,13 +8,16 @@ import { MokaPot } from './MokaPot';
 interface SceneProps {
   scrollProgress: any;
   onHoverPart?: (partName: string | null, metadata: any) => void;
+  variant?: 'dark' | 'beige';
 }
 
-export function Scene({ scrollProgress, onHoverPart }: SceneProps) {
+export function Scene({ scrollProgress, onHoverPart, variant = 'dark' }: SceneProps) {
   const [mounted, setMounted] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(false);
 
   React.useEffect(() => {
     setMounted(true);
+    setIsMobile(window.matchMedia('(max-width: 768px)').matches || ('ontouchstart' in window));
   }, []);
 
   if (!mounted) {
@@ -29,6 +32,7 @@ export function Scene({ scrollProgress, onHoverPart }: SceneProps) {
         gl={{ antialias: true, alpha: true }}
         eventSource={typeof window !== 'undefined' ? document.getElementById('canvas-container') || undefined : undefined}
         className="w-full h-full pointer-events-auto"
+        style={{ touchAction: isMobile ? 'pan-y' : 'none' }}
       >
         {/* Soft Ambient Light */}
         <ambientLight intensity={0.5} />
@@ -51,9 +55,9 @@ export function Scene({ scrollProgress, onHoverPart }: SceneProps) {
         {/* Back Light / Rim Light for depth */}
         <directionalLight position={[-5, 3, -5]} intensity={0.8} color="#93c5fd" />
 
-        {/* 3D Model with scroll & hover handlers */}
+        {/* 3D Model — single pot, centered, variant-controlled */}
         <Suspense fallback={null}>
-          <MokaPot scrollProgress={scrollProgress} onHoverPart={onHoverPart} />
+          <MokaPot scrollProgress={scrollProgress} onHoverPart={onHoverPart} variant={variant} xOffset={0} isMobile={isMobile} />
           
           {/* Studio HDR Environment Map for metallic reflections */}
           <Environment preset="studio" />
@@ -73,6 +77,7 @@ export function Scene({ scrollProgress, onHoverPart }: SceneProps) {
 
         {/* Orbit Controls with limited tilt and disabled zoom/pan to prevent page scroll hijack */}
         <OrbitControls
+          enabled={!isMobile}
           enableZoom={false}
           enablePan={false}
           minPolarAngle={Math.PI / 4}
