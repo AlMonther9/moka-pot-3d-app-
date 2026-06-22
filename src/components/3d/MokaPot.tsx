@@ -167,9 +167,11 @@ const CoffeeBean = ({ position: initialPos, randomRotation, speed, orbitRadius, 
 interface MokaPotProps {
   scrollProgress: any;
   onHoverPart?: (partName: string | null, metadata: PartMetadata | null) => void;
+  variant?: 'dark' | 'beige';
+  xOffset?: number;
 }
 
-export function MokaPot({ scrollProgress, onHoverPart }: MokaPotProps) {
+export function MokaPot({ scrollProgress, onHoverPart, variant = 'dark', xOffset = 0 }: MokaPotProps) {
   const [activeHover, setActiveHover] = useState<string | null>(null);
 
   // Load user's high-quality Moka Pot model
@@ -220,6 +222,7 @@ export function MokaPot({ scrollProgress, onHoverPart }: MokaPotProps) {
     const scale = aspect < 1 ? 8.5 : 12.0;
     if (parentRef.current) {
       parentRef.current.scale.set(scale, scale, scale);
+      parentRef.current.position.x = xOffset;
 
       // B. Dynamic Y translation of parent group to keep the center of deconstructed pot exactly at Y = 0
       const localCenter = THREE.MathUtils.lerp(0.09, 0.154, scrollVal);
@@ -347,24 +350,36 @@ export function MokaPot({ scrollProgress, onHoverPart }: MokaPotProps) {
     }
   };
 
-  // Materials definitions for procedural parts and highlights
+  // Beige painted aluminum body — warm sandy tone
+  const creamBodyMaterial = React.useMemo(() => new THREE.MeshStandardMaterial({
+    color: new THREE.Color('#C8A882'),
+    metalness: 0.20,
+    roughness: 0.60,
+  }), []);
+
+  // Pick material based on variant
+  const bodyMaterial = variant === 'beige' ? creamBodyMaterial : materials['moka-pot-material1'];
+
+  // Brushed steel for internal filter parts
   const metalMaterial = React.useMemo(() => new THREE.MeshStandardMaterial({
-    color: "#e2e8f0",
+    color: '#d4d8df',
     metalness: 0.92,
     roughness: 0.18,
   }), []);
 
+  // Warm silicone gasket
   const gasketMaterial = React.useMemo(() => new THREE.MeshStandardMaterial({
-    color: "#f4f4f5",
-    metalness: 0.05,
-    roughness: 0.8,
+    color: '#D9D0C4',  // warm light grey silicone
+    metalness: 0.04,
+    roughness: 0.82,
   }), []);
 
+
   const activeHoverMaterial = React.useMemo(() => new THREE.MeshStandardMaterial({
-    color: "#f43f5e",
+    color: '#f43f5e',
     metalness: 0.5,
     roughness: 0.1,
-    emissive: "#f43f5e",
+    emissive: '#f43f5e',
     emissiveIntensity: 0.5,
   }), []);
 
@@ -456,7 +471,7 @@ export function MokaPot({ scrollProgress, onHoverPart }: MokaPotProps) {
         <group ref={baseRef}>
           <mesh
             geometry={baseGeo}
-            material={activeHover === 'base' ? activeHoverMaterial : materials['moka-pot-material1']}
+            material={activeHover === 'base' ? activeHoverMaterial : bodyMaterial}
             position={[0, 0.02419, 0]}
             rotation={[-Math.PI / 2, 0, 0]}
             castShadow
@@ -565,7 +580,7 @@ export function MokaPot({ scrollProgress, onHoverPart }: MokaPotProps) {
           {/* Main Upper Chamber (Split from the base geometry) */}
           <mesh
             geometry={colGeo}
-            material={activeHover === 'collector' ? activeHoverMaterial : materials['moka-pot-material1']}
+            material={activeHover === 'collector' ? activeHoverMaterial : bodyMaterial}
             position={[0, 0.02419, 0]}
             rotation={[-Math.PI / 2, 0, 0]}
             castShadow
@@ -582,7 +597,7 @@ export function MokaPot({ scrollProgress, onHoverPart }: MokaPotProps) {
           {/* Lid (Original cover mesh) */}
           <mesh
             geometry={nodes['moka-pot_cover_moka-pot-material1_0'].geometry}
-            material={activeHover === 'collector' ? activeHoverMaterial : materials['moka-pot-material1']}
+            material={activeHover === 'collector' ? activeHoverMaterial : bodyMaterial}
             position={[0, 0.15596, -0.05453]}
             rotation={[-2.356, 0, 0]}
             castShadow
@@ -596,6 +611,7 @@ export function MokaPot({ scrollProgress, onHoverPart }: MokaPotProps) {
               handleHoverChange(null);
             }}
           />
+
         </group>
       </motion.group>
 

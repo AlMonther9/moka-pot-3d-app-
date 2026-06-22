@@ -8,9 +8,10 @@ import { MokaPot } from './MokaPot';
 interface SceneProps {
   scrollProgress: any;
   onHoverPart?: (partName: string | null, metadata: any) => void;
+  variant?: 'dark' | 'beige';
 }
 
-export function Scene({ scrollProgress, onHoverPart }: SceneProps) {
+export function Scene({ scrollProgress, onHoverPart, variant = 'dark' }: SceneProps) {
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -51,9 +52,9 @@ export function Scene({ scrollProgress, onHoverPart }: SceneProps) {
         {/* Back Light / Rim Light for depth */}
         <directionalLight position={[-5, 3, -5]} intensity={0.8} color="#93c5fd" />
 
-        {/* 3D Model with scroll & hover handlers */}
+        {/* 3D Model — single pot, centered, variant-controlled */}
         <Suspense fallback={null}>
-          <MokaPot scrollProgress={scrollProgress} onHoverPart={onHoverPart} />
+          <MokaPot scrollProgress={scrollProgress} onHoverPart={onHoverPart} variant={variant} xOffset={0} />
           
           {/* Studio HDR Environment Map for metallic reflections */}
           <Environment preset="studio" />

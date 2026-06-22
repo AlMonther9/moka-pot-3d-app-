@@ -19,6 +19,7 @@ export default function Home() {
   const [hoveredPart, setHoveredPart] = useState<string | null>(null);
   const [hoveredMetadata, setHoveredMetadata] = useState<PartMetadata | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedVariant, setSelectedVariant] = useState<'dark' | 'beige'>('dark');
 
   // Hook up scroll progress on the main container
   const { scrollYProgress } = useScroll({
@@ -100,7 +101,7 @@ export default function Home() {
         id="canvas-container"
         className="fixed inset-0 w-screen h-screen z-0 pointer-events-auto"
       >
-        <Scene scrollProgress={scrollYProgress} onHoverPart={handleHoverPart} />
+        <Scene scrollProgress={scrollYProgress} onHoverPart={handleHoverPart} variant={selectedVariant} />
       </div>
 
       {/* HTML OVERLAY CONTENT (Drives narrative, navigates, and shows metadata) */}
@@ -108,6 +109,8 @@ export default function Home() {
         scrollProgress={scrollVal}
         hoveredPartName={hoveredPart}
         hoveredPartData={hoveredMetadata}
+        selectedVariant={selectedVariant}
+        onVariantChange={setSelectedVariant}
       />
 
       {/* SCROLL SPACING SECTIONS (Allows scrolling that drives the 3D model) */}
