@@ -197,8 +197,8 @@ export function ContentOverlay({
       </div>
 
       {/* 3. CENTER / BOTTOM CONTENT PANEL (Responsive Layout) */}
-      <div className="w-full grow flex flex-col justify-end md:justify-center max-w-xl pointer-events-none">
-        <div className="relative min-h-[180px] sm:min-h-[260px] flex flex-col justify-end pb-4 sm:pb-8">
+      <div className="w-full grow flex flex-col justify-end max-w-xl pointer-events-none">
+        <div className="relative min-h-[180px] sm:min-h-[260px] flex flex-col justify-end pb-8 sm:pb-16">
           <AnimatePresence mode="wait">
             {activeSection === 0 && (
               <motion.div
