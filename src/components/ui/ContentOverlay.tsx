@@ -328,14 +328,20 @@ export function ContentOverlay({
                 <p className="text-zinc-400 text-xs sm:text-base leading-relaxed">
                   A perfect union of physics, thermodynamics, and aesthetic design. Brew espresso at home that honors Italian tradition.
                 </p>
-                <div className="pt-1.5">
-                  <button
-                    id="cta-brew"
-                    className="group relative flex items-center gap-2.5 sm:gap-3 px-4.5 py-2.5 sm:px-6 sm:py-3.5 bg-linear-to-r from-amber-500 to-rose-500 text-white text-xs sm:text-sm font-bold rounded-xl shadow-lg shadow-rose-500/20 hover:shadow-rose-500/30 transition-all duration-300 transform hover:-translate-y-0.5 focus:outline-none cursor-pointer pointer-events-auto"
+                <div className="pt-1.5 flex items-center gap-4">
+                  <a
+                    id="cta-portfolio"
+                    href="https://almonther.studio/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group relative flex items-center gap-2.5 sm:gap-3 px-4 py-2.5 sm:px-6 sm:py-3.5 bg-linear-to-r from-amber-500 to-rose-500 text-white text-xs sm:text-sm font-bold rounded-xl shadow-lg shadow-rose-500/20 hover:shadow-rose-500/30 transition-all duration-300 transform hover:-translate-y-0.5 pointer-events-auto"
                   >
-                    <span>BREW YOURS NOW</span>
+                    <span>View My Work</span>
                     <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                  </button>
+                  </a>
+                  <span className="text-[10px] font-mono text-zinc-600 tracking-widest uppercase hidden sm:block">
+                    almonther.studio
+                  </span>
                 </div>
               </motion.div>
             )}
