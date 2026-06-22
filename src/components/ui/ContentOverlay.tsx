@@ -301,15 +301,13 @@ export function ContentOverlay({
                 <p className="text-zinc-400 text-xs sm:text-base leading-relaxed">
                   A perfect union of physics, thermodynamics, and aesthetic design. Brew espresso at home that honors Italian tradition.
                 </p>
-                <div className="pt-1.5">
-                  <button
-                    id="cta-restart"
-                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                    className="group relative flex items-center gap-2.5 sm:gap-3 px-4 py-2.5 sm:px-6 sm:py-3.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white text-xs sm:text-sm font-bold rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer pointer-events-auto backdrop-blur-md"
-                  >
-                    <span className="text-zinc-300">↺ Restart Experience</span>
-                  </button>
-                </div>
+                <button
+                  id="cta-restart"
+                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                  className="flex items-center gap-2 text-[10px] sm:text-xs text-amber-500/70 font-semibold font-mono tracking-widest uppercase hover:text-amber-400 transition-colors cursor-pointer pointer-events-auto pt-1"
+                >
+                  <span>↺ Restart Experience</span>
+                </button>
               </motion.div>
             )}
           </AnimatePresence>
