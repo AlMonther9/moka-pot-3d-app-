@@ -189,6 +189,7 @@ export function MokaPot({ scrollProgress, onHoverPart, variant = 'dark', xOffset
   const isDraggingModel = useRef(false);
   const startX = useRef(0);
   const startY = useRef(0);
+  const lastY = useRef(0);
   const startRotationY = useRef(0);
   const startRotationX = useRef(0);
   const touchStartTime = useRef(0);
@@ -524,6 +525,7 @@ export function MokaPot({ scrollProgress, onHoverPart, variant = 'dark', xOffset
       if (e.touches.length !== 1) return;
 
       const touch = e.touches[0];
+      lastY.current = touch.clientY;
       const rect = dom.getBoundingClientRect();
 
       // Normalized device coordinates (-1 to +1)
@@ -580,30 +582,39 @@ export function MokaPot({ scrollProgress, onHoverPart, variant = 'dark', xOffset
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      if (!isDraggingModel.current) return;
-
-      // Prevent the page from scrolling while interacting with the 3D model
-      if (e.cancelable) {
-        e.preventDefault();
-      }
-
       if (e.touches.length !== 1) return;
       const touch = e.touches[0];
 
-      const deltaX = touch.clientX - startX.current;
-      const deltaY = touch.clientY - startY.current;
+      if (isDraggingModel.current) {
+        // Prevent the page from scrolling while interacting with the 3D model
+        if (e.cancelable) {
+          e.preventDefault();
+        }
 
-      if (Math.abs(deltaX) > 4 || Math.abs(deltaY) > 4) {
-        hasMoved.current = true;
+        const deltaX = touch.clientX - startX.current;
+        const deltaY = touch.clientY - startY.current;
+
+        if (Math.abs(deltaX) > 4 || Math.abs(deltaY) > 4) {
+          hasMoved.current = true;
+        }
+
+        // Rotate model: horizontal swipe rotates Y, vertical swipe rotates X (limited)
+        const sensitivity = 0.008;
+        rotationY.current = startRotationY.current + deltaX * sensitivity;
+        
+        const targetRotX = startRotationX.current + deltaY * sensitivity;
+        // Limit vertical rotation to keep the experience intuitive
+        rotationX.current = Math.max(-0.6, Math.min(0.6, targetRotX));
+      } else {
+        // Programmatic page scrolling fallback when dragging in empty space
+        const currentY = touch.clientY;
+        const diffY = lastY.current - currentY;
+        lastY.current = currentY;
+
+        if (Math.abs(diffY) > 0.1) {
+          window.scrollBy(0, diffY);
+        }
       }
-
-      // Rotate model: horizontal swipe rotates Y, vertical swipe rotates X (limited)
-      const sensitivity = 0.008;
-      rotationY.current = startRotationY.current + deltaX * sensitivity;
-      
-      const targetRotX = startRotationX.current + deltaY * sensitivity;
-      // Limit vertical rotation to keep the experience intuitive
-      rotationX.current = Math.max(-0.6, Math.min(0.6, targetRotX));
     };
 
     const handleTouchEnd = (e: TouchEvent) => {
