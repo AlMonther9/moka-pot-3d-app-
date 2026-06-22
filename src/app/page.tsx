@@ -70,9 +70,9 @@ export default function Home() {
                 <Coffee className="w-8 h-8 text-amber-400" />
               </div>
             </motion.div>
-            
+
             <div className="text-center space-y-2">
-              <h3 className="font-bold tracking-widest text-lg text-white">ALMONTHER LABS</h3>
+              <h3 className="font-bold tracking-widest text-lg text-white">BIALETTI LABS</h3>
               <p className="text-xs font-mono text-zinc-500 uppercase tracking-widest flex items-center justify-center gap-2">
                 <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-500" />
                 Calibrating 3D Physics Engine...

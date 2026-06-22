@@ -140,8 +140,8 @@ export function ContentOverlay({
             <img src="/moka_logo.png" alt="Moka Pot Logo" className="w-full h-full object-contain" />
           </div>
           <div>
-            <span className="text-white font-bold tracking-widest text-lg font-sans leading-none block">ALMONTHER</span>
-            <span className="text-amber-500 text-[9px] font-bold block tracking-widest uppercase mt-0.5">LABS // 3D</span>
+            <span className="text-white font-bold tracking-widest text-lg font-sans leading-none block">BIALETTI</span>
+            <span className="text-amber-500 text-[9px] font-bold block tracking-widest uppercase mt-0.5">Almonther LABS // 3D</span>
           </div>
         </motion.div>
 
